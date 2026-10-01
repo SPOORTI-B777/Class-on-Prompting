@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BTS — Beyond the Stage</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;600;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"DM Sans",sans-serif;
+  background:#09060f;color:#fff;overflow-x:hidden;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;
+  background:
+    radial-gradient(circle at 15% 15%,rgba(150,80,255,.24),transparent 25%),
+    radial-gradient(circle at 85% 35%,rgba(255,90,190,.14),transparent 25%),
+    radial-gradient(circle at 45% 90%,rgba(80,170,255,.12),transparent 28%);
+}
+body:after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:20;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+}
+a{color:inherit;text-decoration:none}
+nav{
+ position:fixed;top:0;left:0;width:100%;z-index:100;
+ display:flex;justify-content:space-between;align-items:center;
+ padding:22px 6%;background:rgba(9,6,15,.58);backdrop-filter:blur(18px);
+ border-bottom:1px solid rgba(255,255,255,.08)
+}
+.logo{font:700 24px "Space Grotesk";letter-spacing:.22em}
+nav ul{display:flex;gap:28px;list-style:none;font-size:13px}
+nav a{opacity:.78;transition:.25s}nav a:hover{opacity:1;color:#d7a8ff}
+.hero{min-height:100vh;display:grid;place-items:center;padding:130px 7% 80px;position:relative}
+.hero-inner{text-align:center;max-width:1050px}
+.kicker{letter-spacing:.45em;text-transform:uppercase;color:#cda7ff;font-size:12px;margin-bottom:26px}
+h1{
+ font:700 clamp(90px,19vw,230px)/.78 "Space Grotesk";
+ letter-spacing:-.09em;
+ background:linear-gradient(100deg,#fff 15%,#d9b6ff 42%,#ff9fdc 68%,#fff 90%);
+ background-size:250%;-webkit-background-clip:text;color:transparent;
+ animation:shine 7s linear infinite;
+}
+@keyframes shine{to{background-position:250% center}}
+.hero p{max-width:620px;margin:35px auto;color:#c9bfd3;line-height:1.8}
+.cta{
+ display:inline-flex;align-items:center;gap:12px;padding:15px 24px;border-radius:999px;
+ background:#fff;color:#100817;font-weight:700;transition:.3s
+}
+.cta:hover{transform:translateY(-5px);box-shadow:0 18px 50px rgba(194,125,255,.28)}
+.scroll{position:absolute;bottom:25px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:.25em;opacity:.45}
+section{padding:120px 7%}
+.label{font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:#b88bff;margin-bottom:15px}
+.section-title{font:700 clamp(42px,7vw,82px)/.95 "Space Grotesk";letter-spacing:-.05em;margin-bottom:55px}
+.section-title span{color:#bd8aff}
+.about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:end}
+.big-quote{font:600 clamp(35px,5vw,68px)/1.05 "Space Grotesk";letter-spacing:-.04em}
+.copy{color:#bdb3c8;line-height:1.9;max-width:560px}
+.marquee{
+ margin-top:90px;overflow:hidden;white-space:nowrap;border-block:1px solid rgba(255,255,255,.1);
+ padding:17px 0;color:#d4aaff;font:600 14px "Space Grotesk";letter-spacing:.18em
+}
+.marquee-track{display:inline-block;animation:marquee 18s linear infinite}
+@keyframes marquee{to{transform:translateX(-50%)}}
+.albums{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{
+ min-height:390px;border-radius:28px;padding:25px;position:relative;overflow:hidden;
+ border:1px solid rgba(255,255,255,.12);
+ background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.025));
+ transition:.45s;cursor:pointer
+}
+.card:hover{transform:translateY(-12px) rotate(-1deg);border-color:rgba(215,166,255,.65)}
+.art{
+ height:230px;border-radius:20px;margin-bottom:25px;display:grid;place-items:center;
+ font:700 62px "Space Grotesk";letter-spacing:-.08em;
+}
+.art.one{background:linear-gradient(135deg,#7d36b7,#ef9bdc 55%,#2a164d)}
+.art.two{background:linear-gradient(135deg,#15101f,#734bc7 55%,#e3c7ff)}
+.art.three{background:linear-gradient(135deg,#1b1b35,#4171c7 50%,#f4a9d5)}
+.card small{color:#a99db4}.card h3{font:600 26px "Space Grotesk";margin-top:8px}
+.members{display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+.member{
+ min-height:300px;border-radius:22px;padding:20px;display:flex;align-items:end;
+ position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.1);
+ background:linear-gradient(160deg,rgba(185,128,255,.28),rgba(255,255,255,.035));
+ transition:.4s
+}
+.member:nth-child(2){background:linear-gradient(160deg,rgba(255,171,218,.3),rgba(255,255,255,.035))}
+.member:nth-child(3){background:linear-gradient(160deg,rgba(105,90,180,.35),rgba(255,255,255,.035))}
+.member:nth-child(4){background:linear-gradient(160deg,rgba(255,135,194,.25),rgba(255,255,255,.035))}
+.member:nth-child(5){background:linear-gradient(160deg,rgba(121,177,255,.25),rgba(255,255,255,.035))}
+.member:nth-child(6){background:linear-gradient(160deg,rgba(107,96,207,.3),rgba(255,255,255,.035))}
+.member:nth-child(7){background:linear-gradient(160deg,rgba(186,111,255,.3),rgba(255,255,255,.035))}
+.member:hover{transform:translateY(-9px);box-shadow:0 20px 45px rgba(0,0,0,.28)}
+.member h3{font:700 24px "Space Grotesk"}.member p{font-size:10px;letter-spacing:.18em;color:#d2c5dc;margin-top:5px}
+.player{
+ display:flex;align-items:center;justify-content:space-between;gap:30px;
+ padding:35px;border:1px solid rgba(255,255,255,.12);border-radius:30px;
+ background:linear-gradient(110deg,rgba(173,111,255,.2),rgba(255,255,255,.035))
+}
+.play{width:58px;height:58px;border:0;border-radius:50%;cursor:pointer;font-size:20px}
+.progress{height:4px;background:rgba(255,255,255,.15);border-radius:5px;margin-top:18px;overflow:hidden}
+.bar{height:100%;width:34%;background:#fff;transition:width .15s}
+footer{padding:60px 7%;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;color:#847a8c;font-size:12px}
+@media(max-width:900px){
+ .about-grid{grid-template-columns:1fr}.albums{grid-template-columns:1fr}.members{grid-template-columns:repeat(2,1fr)}
+ .member{min-height:230px}nav ul{display:none}.player{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:520px){section{padding:85px 5%}.members{grid-template-columns:1fr 1fr}.member{min-height:190px}.hero{padding-inline:5%}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">BTS</div>
+  <ul>
+    <li><a href="#story">STORY</a></li>
+    <li><a href="#music">MUSIC</a></li>
+    <li><a href="#members">7</a></li>
+    <li><a href="#listen">LISTEN</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">BEYOND THE STAGE · 7 VOICES · 1 UNIVERSE</div>
+    <h1>BTS</h1>
+    <p>Seven artists. A universe of stories. A fan-made visual portfolio celebrating the music, eras and people behind the purple.</p>
+    <a class="cta" href="#music">ENTER THE UNIVERSE <span>↘</span></a>
+  </div>
+  <div class="scroll">SCROLL TO EXPLORE ↓</div>
+</header>
+
+<section id="story">
+  <div class="label">01 — THE STORY</div>
+  <h2 class="section-title">More than <span>music.</span></h2>
+  <div class="about-grid">
+    <div class="big-quote">“Music became a bridge between seven people and millions of hearts.”</div>
+    <div class="copy">BTS is a South Korean group formed by RM, Jin, SUGA, j-hope, Jimin, V and Jung Kook. Their catalogue moves through youth, identity, love, ambition, uncertainty and self-discovery — turning personal stories into a shared experience.</div>
+  </div>
+  <div class="marquee"><span class="marquee-track">LOVE YOURSELF ✦ MAP OF THE SOUL ✦ BE ✦ DYNAMITE ✦ BUTTER ✦ PROOF ✦ ARMY ✦ LOVE YOURSELF ✦ MAP OF THE SOUL ✦ BE ✦ DYNAMITE ✦ BUTTER ✦ PROOF ✦ ARMY ✦ </span></div>
+</section>
+
+<section id="music">
+  <div class="label">02 — SELECTED ERAS</div>
+  <h2 class="section-title">The <span>discography.</span></h2>
+  <div class="albums">
+    <article class="card">
+      <div class="art one">LY</div><small>2017 — 2018</small><h3>Love Yourself</h3>
+    </article>
+    <article class="card">
+      <div class="art two">MOTS</div><small>2019 — 2020</small><h3>Map of the Soul</h3>
+    </article>
+    <article class="card">
+      <div class="art three">BE</div><small>2020</small><h3>BE</h3>
+    </article>
+  </div>
+</section>
+
+<section id="members">
+  <div class="label">03 — THE SEVEN</div>
+  <h2 class="section-title">Meet the <span>7.</span></h2>
+  <div class="members">
+    <div class="member"><div><h3>RM</h3><p>LEADER · RAPPER</p></div></div>
+    <div class="member"><div><h3>JIN</h3><p>VOCALIST</p></div></div>
+    <div class="member"><div><h3>SUGA</h3><p>RAPPER · PRODUCER</p></div></div>
+    <div class="member"><div><h3>J-HOPE</h3><p>RAPPER · DANCER</p></div></div>
+    <div class="member"><div><h3>JIMIN</h3><p>VOCALIST · DANCER</p></div></div>
+    <div class="member"><div><h3>V</h3><p>VOCALIST</p></div></div>
+    <div class="member"><div><h3>JUNG KOOK</h3><p>VOCALIST</p></div></div>
+  </div>
+</section>
+
+<section id="listen">
+  <div class="label">04 — PRESS PLAY</div>
+  <div class="player">
+    <div>
+      <small id="status">FAN-MADE PLAYER · THE BTS UNIVERSE</small>
+      <h2 style="font:600 clamp(30px,5vw,55px) 'Space Grotesk';margin-top:10px">Press play.</h2>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+    </div>
+    <button class="play" id="play">▶</button>
+  </div>
+</section>
+
+<footer>
+  <span>© FAN-MADE BTS PORTFOLIO</span>
+  <span>MADE WITH 💜 FOR MUSIC & ARMY</span>
+</footer>
+
+<script>
+const play = document.getElementById("play");
+const bar = document.getElementById("bar");
+const status = document.getElementById("status");
+let playing = false;
+let timer;
+
+play.addEventListener("click", () => {
+  playing = !playing;
+  play.textContent = playing ? "Ⅱ" : "▶";
+  status.textContent = playing ? "NOW PLAYING · VISUAL DEMO" : "PAUSED · THE BTS UNIVERSE";
+  clearInterval(timer);
+  if (playing) {
+    timer = setInterval(() => {
+      let width = parseFloat(bar.style.width) || 34;
+      width += 1;
+      if (width >= 100) width = 0;
+      bar.style.width = width + "%";
+    }, 180);
+  }
+});
+</script>
+</body>
+</html>
