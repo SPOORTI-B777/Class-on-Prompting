@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BTS — ARIRANG</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#070707;--fg:#f4f1ea;--mut:#8d8a84;--h:350;--ac:hsl(var(--h) 85% 55%);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--fg);font-family:"Helvetica Neue",Arial,sans-serif;overflow-x:hidden}
+canvas#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+section{position:relative;z-index:1;padding:12vh 6vw}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-top:8vh}
+.kick{font:600 11px/1 monospace;letter-spacing:.3em;color:var(--ac);text-transform:uppercase;transition:color .6s}
+.title{font-weight:900;font-size:clamp(46px,17.5vw,230px);letter-spacing:-.04em;line-height:.9;margin:2vh 0;display:flex;flex-wrap:nowrap;user-select:none}
+.title span{display:inline-block;transition:transform .25s cubic-bezier(.2,.8,.2,1),color .3s;will-change:transform}
+.title span:hover{color:var(--ac)}
+.sub{max-width:34ch;color:var(--mut);line-height:1.5;font-size:15px}
+.hint{margin-top:5vh;font:11px monospace;letter-spacing:.2em;color:var(--mut);animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.marq{position:relative;z-index:1;overflow:hidden;border-block:1px solid #ffffff22;padding:14px 0;background:#0b0b0bcc}
+.marq div{display:flex;width:max-content;gap:3rem;animation:scroll 22s linear infinite;font:800 clamp(22px,5vw,44px)/1 Arial;white-space:nowrap}
+.marq:hover div{animation-play-state:paused}
+.marq i{font-style:normal;color:transparent;-webkit-text-stroke:1px var(--fg)}
+@keyframes scroll{to{transform:translateX(-50%)}}
+h2{font-size:clamp(30px,7vw,72px);font-weight:900;letter-spacing:-.03em;line-height:1;margin-bottom:5vh}
+h2 em{font-style:normal;color:var(--ac);transition:color .6s}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:#ffffff22;border:1px solid #ffffff22}
+.stat{background:var(--bg);padding:26px 18px;cursor:pointer;transition:background .3s}
+.stat:hover{background:#151515}
+.stat b{display:block;font-size:clamp(38px,8vw,64px);font-weight:900;letter-spacing:-.04em}
+.stat small{color:var(--mut);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.rv{opacity:0;transform:translateY(40px);transition:opacity .8s,transform .8s cubic-bezier(.2,.8,.2,1)}
+.rv.on{opacity:1;transform:none}
+.player{display:grid;grid-template-columns:1fr;gap:5vh}
+@media(min-width:820px){.player{grid-template-columns:1.1fr 1fr;align-items:start}}
+.disc-wrap{position:sticky;top:12px;display:flex;flex-direction:column;align-items:center;gap:20px}
+.disc{width:min(70vw,340px);aspect-ratio:1;border-radius:50%;background:conic-gradient(from 0deg,#111,#1d1d1d,#0a0a0a,#222,#111);position:relative;animation:spin 8s linear infinite;animation-play-state:paused;box-shadow:0 0 0 1px #ffffff22,0 30px 80px hsl(var(--h) 85% 40%/.35);transition:box-shadow .6s}
+.disc.go{animation-play-state:running}
+.disc:before{content:"";position:absolute;inset:8%;border-radius:50%;background:repeating-radial-gradient(#0000 0 3px,#ffffff0d 3px 4px)}
+.disc:after{content:"";position:absolute;inset:34%;border-radius:50%;background:var(--ac);transition:background .6s;display:grid;place-items:center}
+.disc .no{position:absolute;inset:34%;display:grid;place-items:center;z-index:2;font-weight:900;font-size:clamp(28px,8vw,48px);color:#000}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn{background:none;border:1px solid var(--fg);color:var(--fg);padding:12px 26px;border-radius:99px;font:700 12px monospace;letter-spacing:.2em;cursor:pointer;transition:.25s}
+.btn:hover{background:var(--fg);color:#000}
+.eq{display:flex;gap:4px;height:34px;align-items:flex-end}
+.eq u{width:5px;background:var(--ac);height:20%;transition:background .6s}
+.go~.eq u,.eq.go u{animation:eq .7s ease-in-out infinite alternate}
+.eq u:nth-child(2n){animation-delay:.15s!important}.eq u:nth-child(3n){animation-delay:.3s!important}
+@keyframes eq{to{height:100%}}
+.trk{border-top:1px solid #ffffff22;padding:16px 4px;cursor:pointer;display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:6px;position:relative;transition:padding .35s,color .3s}
+.trk:hover{padding-left:16px}
+.trk .n{font:12px monospace;color:var(--mut)}
+.trk .t{font-size:clamp(20px,4.6vw,30px);font-weight:800;letter-spacing:-.02em}
+.trk .tag{font:700 9px monospace;letter-spacing:.15em;border:1px solid var(--ac);color:var(--ac);padding:4px 8px;border-radius:99px;transition:.6s}
+.trk.act{color:var(--ac)}
+.trk .d{grid-column:2/4;max-height:0;overflow:hidden;color:var(--fg);font-size:14px;line-height:1.5;opacity:0;transition:max-height .45s,opacity .45s}
+.trk.act .d{max-height:110px;opacity:.85;padding-top:8px}
+.team{display:flex;flex-wrap:wrap;gap:10px}
+.chip{border:1px solid #ffffff33;border-radius:99px;padding:12px 20px;font-weight:700;cursor:pointer;transition:.25s}
+.chip:hover,.chip.on{background:var(--ac);border-color:var(--ac);color:#000;transform:translateY(-3px) rotate(-1.5deg)}
+#chipTxt{margin-top:24px;min-height:3.5em;max-width:60ch;color:var(--mut);line-height:1.55}
+footer{position:relative;z-index:1;padding:8vh 6vw 10vh;color:var(--mut);font-size:12px;line-height:1.7}
+.big{font-size:clamp(28px,6vw,60px);font-weight:900;letter-spacing:-.03em;color:var(--fg);margin-bottom:12px}
+</style></head><body>
+<canvas id="fx"></canvas>
+
+<section class="hero">
+  <div class="kick">BTS · The 5th Album · 2026.03.20</div>
+  <div class="title" id="title"></div>
+  <p class="sub">Fourteen tracks. A folk song older than pop itself, rebuilt for a group coming home.</p>
+  <div class="hint">↓ MOVE YOUR CURSOR / DRAG YOUR FINGER</div>
+</section>
+
+<div class="marq"><div id="mq"></div></div>
+
+<section>
+  <h2 class="rv">The comeback, <em>in numbers.</em></h2>
+  <div class="stats rv">
+    <div class="stat" data-n="14"><b>0</b><small>Tracks</small></div>
+    <div class="stat" data-n="45" data-s="mo"><b>0</b><small>Months since last full album (3y 9m)</small></div>
+    <div class="stat" data-n="4"><b>0</b><small>Follow-up / title tracks</small></div>
+    <div class="stat" data-n="2027" data-s=""><b>0</b><small>Tour runs Apr 2026 → Mar 2027</small></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="rv">Press play. <em>Pick a track.</em></h2>
+  <div class="player">
+    <div class="disc-wrap rv">
+      <div class="disc" id="disc"><div class="no" id="dno">07</div></div>
+      <div class="eq" id="eq"><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u><u></u></div>
+      <button class="btn" id="spin">▶ SPIN</button>
+    </div>
+    <div id="list" class="rv"></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="rv">Roots, <em>remixed.</em></h2>
+  <p class="rv" style="max-width:56ch;color:var(--mut);line-height:1.6;margin-bottom:5vh">The title points to the Korean folk song “Arirang.” Big Hit Music describes the album as a reflective body of work about identity and roots — and the folk song is literally sampled on opener “Body to Body.” Tap a name to see who shaped the sound.</p>
+  <div class="team rv" id="team"></div>
+  <p id="chipTxt">↑ Tap one.</p>
+</section>
+
+<footer>
+  <div class="big">ARMY, it's your turn.</div>
+  Sources: Billboard, Rolling Stone, Apple Music, Wikipedia. Unofficial fan-made motion piece — not affiliated with HYBE / BIGHIT MUSIC.
+</footer>
+
+<script>
+const T=[
+["Body to Body","Opener. Produced with Diplo, Pdogg, Picard Brothers & Ryan Tedder, and it samples the folk song “Arirang.” SUGA and j-hope are credited.","3:09",350],
+["Hooligan","Follow-up track. Jung Kook helped create it.","3:02",20],
+["Aliens","Second-act energy — a fan favourite on the tracklist.","2:47",150],
+["FYA","Diplo is credited as a producer.","3:00",280],
+["2.0","Follow-up track with a music video and a Fallon performance. V worked on it.","2:49",45],
+["No. 29","The album's shortest cut — a quick, sharp interlude.","1:38",200],
+["SWIM","THE TITLE TRACK. The one the whole album points to.","2:39",350],
+["Merry Go Round","Credits include SUGA and j-hope. Longest of the first eight.","3:49",320],
+["NORMAL","Follow-up track. SUGA and j-hope are credited.","",90],
+["Like Animals","Another Diplo production.","",10],
+["they don't know 'bout us","Jimin helped create this one.","",260],
+["One More Night","Produced with Diplo.","",30],
+["Please","A quiet turn near the end.","2:52",180],
+["Into the Sun","The anthemic closer. Jimin and V both worked on it.","3:47",40]
+];
+const tag={1:"FOLLOW-UP",4:"FOLLOW-UP",6:"TITLE",8:"FOLLOW-UP"};
+const root=document.documentElement;
+// title letters
+const title=document.getElementById('title');
+[..."ARIRANG"].forEach(c=>{const s=document.createElement('span');s.textContent=c;title.appendChild(s)});
+const L=[...title.children];
+// marquee
+const mq=document.getElementById('mq');
+let m="";for(let i=0;i<2;i++)for(const t of T)m+=`<span>${t[0].toUpperCase()}</span><i>${t[0].toUpperCase()}</i>`;
+mq.innerHTML=m;
+// tracklist
+const list=document.getElementById('list'),dno=document.getElementById('dno'),disc=document.getElementById('disc'),eq=document.getElementById('eq');
+T.forEach((t,i)=>{const r=document.createElement('div');r.className='trk';
+r.innerHTML=`<span class="n">${String(i+1).padStart(2,'0')}</span><span class="t">${t[0]}</span>${tag[i+1]?`<span class="tag">${tag[i+1]}</span>`:'<span></span>'}<div class="d">${t[1]}${t[2]?' · '+t[2]:''}</div>`;
+r.onclick=()=>pick(i);list.appendChild(r)});
+function pick(i){[...list.children].forEach((e,j)=>e.classList.toggle('act',i===j));
+ root.style.setProperty('--h',T[i][3]);dno.textContent=String(i+1).padStart(2,'0');hue=T[i][3];}
+let hue=350;pick(6);
+document.getElementById('spin').onclick=function(){const g=disc.classList.toggle('go');eq.classList.toggle('go',g);this.textContent=g?'❚❚ PAUSE':'▶ SPIN'};
+// stats
+document.querySelectorAll('.stat').forEach(s=>{const b=s.querySelector('b'),n=+s.dataset.n;let done=0;
+ const run=()=>{const t0=performance.now();(function f(t){const p=Math.min(1,(t-t0)/1400);b.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0)};
+ s._run=run;s.onclick=run});
+// collaborators
+const C={"Diplo":"Co-produced Body to Body, FYA, One More Night, Like Animals and Into the Sun — and told TMZ it would “shock the world.”","Kevin Parker":"Tame Impala's mastermind is among the album's credited producers.","Mike WiLL Made-It":"Hip-hop heavyweight producer credited on the album.","Ryan Tedder":"Pop hitmaker; co-produced Body to Body.","Flume":"Australian electronic producer on the credits.","El Guincho":"Spanish producer known for experimental, rhythmic pop.","JPEGMAFIA":"Experimental rap artist among the credited collaborators.","Pdogg":"Longtime Big Hit producer on Body to Body."};
+const team=document.getElementById('team'),ct=document.getElementById('chipTxt');
+Object.keys(C).forEach(k=>{const c=document.createElement('div');c.className='chip';c.textContent=k;
+ c.onclick=()=>{[...team.children].forEach(x=>x.classList.remove('on'));c.classList.add('on');ct.textContent=C[k];ct.style.color='var(--fg)';root.style.setProperty('--h',Math.floor(Math.random()*360))};team.appendChild(c)});
+// reveal
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');e.target.querySelectorAll?.('.stat').forEach(s=>s._run());if(e.target.classList.contains('stats'))e.target.querySelectorAll('.stat').forEach(s=>s._run())}}),{threshold:.2});
+document.querySelectorAll('.rv').forEach(e=>io.observe(e));
+// pointer + canvas
+const cv=document.getElementById('fx'),x=cv.getContext('2d');let W,H,P=[],mx=-999,my=-999;
+function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight}rs();addEventListener('resize',rs);
+for(let i=0;i<110;i++)P.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*2+.6});
+function mv(e){const t=e.touches?e.touches[0]:e;mx=t.clientX;my=t.clientY;
+ L.forEach(s=>{const r=s.getBoundingClientRect(),dx=mx-(r.left+r.width/2),dy=my-(r.top+r.height/2),d=Math.hypot(dx,dy),f=Math.max(0,1-d/260);
+  s.style.transform=`translate(${-dx*f*.18}px,${-dy*f*.18}px) scale(${1+f*.18}) rotate(${dx*f*.03}deg)`})}
+addEventListener('pointermove',mv);addEventListener('touchmove',mv,{passive:true});
+addEventListener('click',e=>{for(let i=0;i<14;i++){const a=Math.random()*6.28,v=2+Math.random()*4;P.push({x:e.clientX,y:e.clientY,vx:Math.cos(a)*v,vy:Math.sin(a)*v,r:2.5,burst:1})}});
+(function loop(){x.clearRect(0,0,W,H);const col=`hsl(${hue} 85% 58%`;
+ for(let i=P.length-1;i>=0;i--){const p=P[i],dx=p.x-mx,dy=p.y-my,d=Math.hypot(dx,dy);
+  if(d<140){p.vx+=dx/d*.35;p.vy+=dy/d*.35}
+  p.vx*=.985;p.vy*=.985;p.x+=p.vx;p.y+=p.vy;
+  if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+  if(p.burst){p.r-=.05;if(p.r<=.2){P.splice(i,1);continue}}
+  x.fillStyle=col+`/${p.burst?.9:.55})`;x.beginPath();x.arc(p.x,p.y,p.r,0,6.28);x.fill();
+  for(let j=i-1;j>=Math.max(0,i-12);j--){const q=P[j],e=Math.hypot(p.x-q.x,p.y-q.y);if(e<90&&!p.burst&&!q.burst){x.strokeStyle=col+`/${.18*(1-e/90)})`;x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.stroke()}}}
+ requestAnimationFrame(loop)})();
+</script></body></html>
